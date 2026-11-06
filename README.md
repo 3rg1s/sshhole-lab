@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/sshhole-lab.svg" alt="sshhole-lab logo" width="520">
+  <img src="assets/sshhole-lab.svg" alt="sshhole-lab: OpenSSH and musl local Docker lab" width="720">
 </p>
 
 <h1 align="center">sshhole-lab</h1>
@@ -25,6 +25,22 @@ A local-only Docker lab and read-only container audit for the OpenSSH/musl passw
 - `compose.yaml` — runs the SSH service on loopback in a private Docker network, with no host mounts.
 - `check_sshhole.py` — read-only heuristic audit of running Docker containers.
 - `verify-lab.sh` — optional isolated Docker client that checks the lab behavior using a 300-character password.
+
+## Verification output
+
+The repo's verifier makes one 300-character password attempt against the deliberately vulnerable lab on its private Docker network. This was the successful output from the final local run:
+
+<p align="center">
+  <img src="assets/verification-terminal.svg" alt="Terminal output showing the verifier command and successful auditdirectory login" width="900">
+</p>
+
+```text
+$ docker compose --profile verify run --rm verify-lab
+Warning: Permanently added '[vulnerable-ssh]:2222' (ED25519) to the list of known hosts.
+uid=1000(auditdirectory) gid=1000(auditdirectory) groups=1000(auditdirectory)
+```
+
+The returned `uid` confirms that the lab account authenticated. The test runs only inside the isolated Docker network; it does not target an external SSH host.
 
 ## What this repo demonstrates
 
