@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/sshhole-lab.svg" alt="sshhole-lab: OpenSSH and musl local Docker lab" width="720">
-</p>
-
 <h1 align="center">sshhole-lab</h1>
 
 <p align="center">
@@ -24,23 +20,35 @@ A local-only Docker lab and read-only container audit for the OpenSSH/musl passw
 - `sshd_config` — enables password authentication for the disposable lab account.
 - `compose.yaml` — runs the SSH service on loopback in a private Docker network, with no host mounts.
 - `check_sshhole.py` — read-only heuristic audit of running Docker containers.
-- `verify-lab.sh` — optional isolated Docker client that checks the lab behavior using a 300-character password.
+- `verify-lab.sh` — optional isolated Docker client that checks a short wrong password and two different 300-character passwords.
 
 ## Verification output
 
-The repo's verifier makes one 300-character password attempt against the deliberately vulnerable lab on its private Docker network. This was the successful output from the final local run:
+The verifier first checks that a short incorrect password is rejected, then visibly prints and tries two different 300-character passwords against the locked lab account. The printed strings are the exact inputs sent; both long inputs authenticate on the private Docker network. This was the output from the local run:
 
 <p align="center">
-  <img src="assets/verification-terminal.svg" alt="Terminal output showing the verifier command and successful auditdirectory login" width="900">
+  <img src="assets/verification-terminal.gif" alt="Animated terminal showing the verifier command and successful auditdirectory login" width="900">
 </p>
 
 ```text
 $ docker compose --profile verify run --rm verify-lab
-Warning: Permanently added '[vulnerable-ssh]:2222' (ED25519) to the list of known hosts.
+Short control password: definitely-not-the-password
+Short wrong password: rejected
+Password input (A repeated 300 times):
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+300 A characters: accepted
+uid=1000(auditdirectory) gid=1000(auditdirectory) groups=1000(auditdirectory)
+Password input (B repeated 300 times):
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+300 B characters: accepted
 uid=1000(auditdirectory) gid=1000(auditdirectory) groups=1000(auditdirectory)
 ```
 
-The returned `uid` confirms that the lab account authenticated. The test runs only inside the isolated Docker network; it does not target an external SSH host.
+The two different long values show that access does not depend on knowing the account's password. The short control is rejected. The test runs only inside the isolated Docker network; it does not target an external SSH host.
 
 ## What this repo demonstrates
 
@@ -96,7 +104,7 @@ If your local environment blocks connections from host tools to Docker's publish
 docker compose --profile verify run --rm verify-lab
 ```
 
-It makes one test login to this lab only and should print the lab account's `id`. The verifier image is disposable; this command removes its container when it exits and keeps the image for reuse.
+It checks one short wrong password and two different 300-character values against this lab only. It should report the short input rejected and both long inputs accepted, with the lab account's `id`. The verifier image is disposable; this command removes its container when it exits and keeps the image for reuse.
 
 ## Run the audit
 
