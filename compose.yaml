@@ -1,0 +1,36 @@
+services:
+  vulnerable-ssh:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: sshhole-lab:openssh-10.2p1
+    init: true
+    ports:
+      - "127.0.0.1:${SSHOLE_HOST_PORT:-2222}:2222"
+    networks:
+      - isolated
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "busybox", "nc", "-z", "127.0.0.1", "2222"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+
+  verify-lab:
+    profiles: ["verify"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: verify-client
+    depends_on:
+      vulnerable-ssh:
+        condition: service_healthy
+    networks:
+      - isolated
+
+networks:
+  isolated:
+    internal: true

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" role="img" aria-labelledby="title desc">
+  <title id="title">sshhole-lab</title>
+  <desc id="desc">A terminal window and shield mark for a contained SSH security lab.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101a2b"/>
+      <stop offset="1" stop-color="#1e3450"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#71e0c1"/>
+      <stop offset="1" stop-color="#39a9bd"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="240" rx="28" fill="url(#bg)"/>
+  <circle cx="58" cy="54" r="8" fill="#ff756e"/>
+  <circle cx="86" cy="54" r="8" fill="#ffc45b"/>
+  <circle cx="114" cy="54" r="8" fill="#71d7a6"/>
+  <rect x="40" y="78" width="514" height="122" rx="16" fill="#0b1320" stroke="#38516b" stroke-width="2"/>
+  <path d="m82 119 24 20-24 20" fill="none" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M133 159h82" stroke="#d8e6f3" stroke-width="8" stroke-linecap="round"/>
+  <path d="M603 61 714 99v42c0 39-25 69-111 97-86-28-111-58-111-97V99z" fill="#14243a" stroke="url(#accent)" stroke-width="7"/>
+  <path d="m559 145 32 32 62-68" fill="none" stroke="#80e7c8" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="755" y="112" fill="#f1f6fb" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="40" font-weight="700">sshhole</text>
+  <text x="756" y="157" fill="#8fa8c1" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="24">local lab</text>
+</svg>

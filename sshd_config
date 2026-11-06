@@ -1,0 +1,11 @@
+Port 2222
+ListenAddress 0.0.0.0
+HostKey /run/sshd/ssh_host_ed25519_key
+PidFile /run/sshd/sshd.pid
+PasswordAuthentication yes
+KbdInteractiveAuthentication no
+PermitEmptyPasswords no
+AllowUsers auditdirectory
+PermitRootLogin no
+UseDNS no
+LogLevel VERBOSE
